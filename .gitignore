@@ -1,0 +1,8 @@
+competition_data/
+baseline_outputs/
+classical_outputs/
+__pycache__/
+*.pyc
+*.zip
+.vscode/
+.idea/
