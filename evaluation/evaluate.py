@@ -1,93 +1,169 @@
-import os
+#!/usr/bin/env python3
+"""
+evaluate.py
+-----------------------
+Computes the denoising score for a set of images. This is a self-check
+tool: it reads the noisy input, your denoised output, and the ground-truth
+images, then reports the mean PSNR, SSIM, and composite score.
+
+USAGE (three required paths):
+    python evaluate.py \
+        --noisy_dir noise_test \
+        --pred_dir my_outputs \
+        --gt_dir ground_truth_test
+
+Filename convention:
+    ground_truth_test/001.png          <- ground truth
+    noise_test/001_noise.png            <- noisy input (given to you)
+    my_outputs/001.png                   <- YOUR reconstruction (same id, NO suffix)
+
+"""
+
+from __future__ import annotations
+
 import argparse
+from pathlib import Path
+
 import numpy as np
-import cv2
-from skimage.metrics import peak_signal_noise_ratio as psnr_fn
-from skimage.metrics import structural_similarity as ssim_fn
+from PIL import Image, UnidentifiedImageError
+from skimage.metrics import peak_signal_noise_ratio as sk_psnr
+from skimage.metrics import structural_similarity as sk_ssim
 
 
-def compute_metrics(gt_img, test_img):
-    """Compute PSNR and multichannel SSIM on RGB images [0, 255]."""
-    cur_psnr = psnr_fn(gt_img, test_img, data_range=255)
-    cur_ssim = ssim_fn(gt_img, test_img, channel_axis=2, data_range=255)
-    return cur_psnr, cur_ssim
+def ssim_value(a: np.ndarray, b: np.ndarray) -> float:
+    return float(sk_ssim(
+        a, b,
+        channel_axis=-1,
+        data_range=1.0,
+        win_size=7,
+        gaussian_weights=False,
+        use_sample_covariance=True,
+        K1=0.01,
+        K2=0.03,
+    ))
 
 
-def evaluate(gt_dir, noisy_dir, denoised_dir):
-    gt_files = sorted([f for f in os.listdir(gt_dir) if f.endswith(('.png', '.jpg', '.jpeg'))])
+def normalize_delta_psnr(delta_psnr: float) -> float:
+    return float(np.clip(delta_psnr / 15.0, 0.0, 1.0))
 
-    psnr_noisy_list, ssim_noisy_list = [], []
-    psnr_denoised_list, ssim_denoised_list = [], []
 
-    print(f"Found {len(gt_files)} ground truth images for evaluation.")
+def official_composite(delta_psnr: float, delta_ssim: float) -> float:
+    normalized_delta_psnr = normalize_delta_psnr(delta_psnr)
+    positive_delta_ssim = max(delta_ssim, 0.0)
+    return float(0.6 * normalized_delta_psnr + 0.4 * positive_delta_ssim)
 
-    for gt_name in gt_files:
-        base_id = os.path.splitext(gt_name)[0]
 
-        # Ground truth path
-        gt_path = os.path.join(gt_dir, gt_name)
-        gt_img = cv2.imread(gt_path)
-        gt_img = cv2.cvtColor(gt_img, cv2.COLOR_BGR2RGB)
+def load_rgb_float(path: Path) -> np.ndarray:
+    try:
+        with Image.open(path) as img:
+            arr = np.asarray(img.convert("RGB"), dtype=np.float32) / 255.0
+    except (UnidentifiedImageError, OSError) as exc:
+        raise SystemExit(f"ERROR: cannot read image {path}: {exc}")
+    return arr
 
-        # Corresponding noisy file (e.g., 001_noise.png)
-        noisy_name = f"{base_id}_noise.png"
-        noisy_path = os.path.join(noisy_dir, noisy_name)
-        if not os.path.exists(noisy_path):
-            # Fallback in case noisy file uses the base name directly
-            noisy_path = os.path.join(noisy_dir, gt_name)
 
-        noisy_img = cv2.imread(noisy_path)
-        noisy_img = cv2.cvtColor(noisy_img, cv2.COLOR_BGR2RGB)
+def find_image_ids(gt_dir: Path) -> list[str]:
+    ids = sorted(p.stem for p in gt_dir.glob("*.png"))
+    if not ids:
+        raise SystemExit(f"ERROR: no .png files found in ground-truth dir {gt_dir}")
+    return ids
 
-        # Denoised output file (e.g., 001.png)
-        denoised_path = os.path.join(denoised_dir, gt_name)
-        if not os.path.exists(denoised_path):
-            print(f"Warning: Missing denoised prediction for {gt_name}. Skipping.")
+
+def evaluate_image(image_id: str, pred_path: Path, gt_path: Path, noisy_path: Path) -> dict:
+    pred = load_rgb_float(pred_path)
+    gt = load_rgb_float(gt_path)
+    noisy = load_rgb_float(noisy_path)
+
+    if pred.shape != gt.shape:
+        raise SystemExit(f"ERROR: {image_id}: your prediction shape {pred.shape} "
+                          f"doesn't match ground truth shape {gt.shape}")
+    if noisy.shape != gt.shape:
+        raise SystemExit(f"ERROR: {image_id}: noisy input shape {noisy.shape} "
+                          f"doesn't match ground truth shape {gt.shape}")
+
+    psnr = float(sk_psnr(gt, pred, data_range=1.0))
+    ssim = ssim_value(gt, pred)
+    noisy_psnr = float(sk_psnr(gt, noisy, data_range=1.0))
+    noisy_ssim = ssim_value(gt, noisy)
+    delta_psnr = psnr - noisy_psnr
+    delta_ssim = ssim - noisy_ssim
+    composite = official_composite(delta_psnr, delta_ssim)
+
+    return {
+        "image_id": image_id,
+        "psnr": psnr,
+        "ssim": ssim,
+        "noisy_psnr": noisy_psnr,
+        "noisy_ssim": noisy_ssim,
+        "delta_psnr": delta_psnr,
+        "delta_ssim": delta_ssim,
+        "composite_score": composite,
+    }
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                  description=__doc__)
+    ap.add_argument("--noisy_dir", required=True, type=Path,
+                     help="Folder of noisy input images given to you")
+    ap.add_argument("--pred_dir", required=True, type=Path,
+                     help="Folder of YOUR reconstructed images")
+    ap.add_argument("--gt_dir", required=True, type=Path,
+                     help="Folder of ground-truth images you have access to "
+                          "(e.g. your own held-out validation split)")
+    args = ap.parse_args()
+
+    for label, d in [("--noisy_dir", args.noisy_dir), ("--pred_dir", args.pred_dir),
+                      ("--gt_dir", args.gt_dir)]:
+        if not d.exists() or not d.is_dir():
+            raise SystemExit(f"ERROR: {label} does not exist or is not a folder: {d}")
+
+    image_ids = find_image_ids(args.gt_dir)
+
+    rows, missing = [], []
+    for image_id in image_ids:
+        gt_path = args.gt_dir / f"{image_id}.png"
+        noisy_path = args.noisy_dir / f"{image_id}_noise.png"
+        pred_path = args.pred_dir / f"{image_id}.png"
+
+        if not noisy_path.exists():
+            missing.append(str(noisy_path))
+            continue
+        if not pred_path.exists():
+            missing.append(str(pred_path))
             continue
 
-        denoised_img = cv2.imread(denoised_path)
-        denoised_img = cv2.cvtColor(denoised_img, cv2.COLOR_BGR2RGB)
+        rows.append(evaluate_image(image_id, pred_path, gt_path, noisy_path))
 
-        # Compute metrics
-        p_noisy, s_noisy = compute_metrics(gt_img, noisy_img)
-        p_denoised, s_denoised = compute_metrics(gt_img, denoised_img)
+    if missing:
+        print("The following expected files were not found:")
+        for m in missing:
+            print(f"  - {m}")
+        print(f"\nScored {len(rows)} / {len(image_ids)} images.\n")
 
-        psnr_noisy_list.append(p_noisy)
-        ssim_noisy_list.append(s_noisy)
-        psnr_denoised_list.append(p_denoised)
-        ssim_denoised_list.append(s_denoised)
+    if not rows:
+        raise SystemExit("ERROR: no images could be scored.")
 
-    # Average metrics
-    avg_psnr_noisy = np.mean(psnr_noisy_list)
-    avg_ssim_noisy = np.mean(ssim_noisy_list)
-    avg_psnr_denoised = np.mean(psnr_denoised_list)
-    avg_ssim_denoised = np.mean(ssim_denoised_list)
+    mean_psnr = float(np.mean([r["psnr"] for r in rows]))
+    mean_ssim = float(np.mean([r["ssim"] for r in rows]))
+    mean_delta_psnr = float(np.mean([r["delta_psnr"] for r in rows]))
+    mean_delta_ssim = float(np.mean([r["delta_ssim"] for r in rows]))
+    mean_composite = float(np.mean([r["composite_score"] for r in rows]))
 
-    # Delta calculations
-    delta_psnr = avg_psnr_denoised - avg_psnr_noisy
-    delta_ssim = avg_ssim_denoised - avg_ssim_noisy
+    print("=" * 46)
+    print("EVALUATION COMPLETE")
+    print("=" * 46)
+    print(f"Images scored:      {len(rows)}")
+    print(f"Mean PSNR:           {mean_psnr:.4f} dB")
+    print(f"Mean SSIM:           {mean_ssim:.6f}")
+    print(f"Mean Delta PSNR:     {mean_delta_psnr:+.4f} dB")
+    print(f"Mean Delta SSIM:     {mean_delta_ssim:+.6f}")
+    print()
+    print(f"Composite Score:     {mean_composite:.8f}")
+    print("=" * 46)
 
-    # Mora SP Cup scoring equation
-    N = np.clip(delta_psnr / 15.0, 0.0, 1.0)
-    S = max(delta_ssim, 0.0)
-    eval_score = 0.6 * N + 0.4 * S
-
-    print("-" * 50)
-    print(f"Noisy PSNR:     {avg_psnr_noisy:.4f} dB | Noisy SSIM:     {avg_ssim_noisy:.4f}")
-    print(f"Denoised PSNR:  {avg_psnr_denoised:.4f} dB | Denoised SSIM:  {avg_ssim_denoised:.4f}")
-    print(f"Delta PSNR:     {delta_psnr:.4f} dB")
-    print(f"Delta SSIM:     {delta_ssim:.4f}")
-    print(f"N (PSNR term):  {N:.4f}")
-    print(f"S (SSIM term):  {S:.4f}")
-    print(f"Evaluation Composite Score: {eval_score:.4f}")
-    print("-" * 50)
+    return 0
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Mora SP Cup 2026 Image Evaluation")
-    parser.add_argument("--gt_dir", type=str, required=True, help="Path to ground truth folder")
-    parser.add_argument("--noisy_dir", type=str, required=True, help="Path to noisy images folder")
-    parser.add_argument("--denoised_dir", type=str, required=True, help="Path to denoised images folder")
-    args = parser.parse_args()
-
-    evaluate(args.gt_dir, args.noisy_dir, args.denoised_dir)
+    raise SystemExit(main())
