@@ -90,9 +90,10 @@ A ready-to-run Google Colab / Kaggle notebook is also included at `Mora_SP_Cup_C
 ## 6. Official Submission Information
 
 * **Team Name:** Zentrix
-* **Git Commit SHA:** `<LATEST_COMMIT_SHA>`
-* **Model Checkpoint:** `best_denoiser.pth`
-* **Model Drive Link:** `<GOOGLE_DRIVE_LINK_TO_WEIGHTS>`
-* **Expected Model Path:** `scripts/checkpoints/best_denoiser.pth`
-* **Model SHA-256:** `1b7dba5b99608fb35d0898a19b852adee8de4e46d82c339d4ea956017b4246b3`
+* **Model Architecture:** NAFNet-Ultra (width=48, 4.6M params)
+* **Model Checkpoint:** `models/best_denoiser_v4.pth`
+* **Model SHA-256 Checksum:** `9aec3377266119fa7e52448ddd7ee68c31adf7028f32203867fb86adf3fbb06e`
+* **Validation PSNR:** `30.4553 dB`
+* **Validation SSIM:** `0.8659`
+* **Official Composite Score:** `0.5858` (+122.5% over baseline)
 
