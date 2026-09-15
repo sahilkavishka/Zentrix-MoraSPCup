@@ -17,7 +17,8 @@
 | **Noisy Raw Input** | 19.8257 | 0.4644 | 0.0000 | 0.0000 | 0.0000 | Baseline Reference |
 | **Organizer Baseline (NLM)** | 24.3360 | 0.6717 | +4.5103 | +0.2073 | 0.2633 | Baseline |
 | **Zentrix ULTRA Hybrid (NAFNet-v3)** | 29.0013 | 0.8817 | +9.1756 | +0.4173 | 0.5339 | +102.8% |
-| **Zentrix ULTRA Fine-Tuned (NAFNet-v4)** | **30.4553** | **0.8659** | **+10.6296** | **+0.4015** | **0.5858** | **+122.5%** 🚀 |
+| **Zentrix ULTRA Fine-Tuned (NAFNet-v4)** | 30.4553 | 0.8659 | +10.6296 | +0.4015 | 0.5858 | +122.5% |
+| **Zentrix ULTRA Grandmaster (v6)** | **30.8955** | **0.8908** | **+11.0698** | **+0.4264** | **0.6134** | **+132.9%** 🏆 |
 
 $$\text{Composite Score} = 0.6 \cdot \text{clip}\left(\frac{\Delta\text{PSNR}}{15}, 0, 1\right) + 0.4 \cdot \max(\Delta\text{SSIM}, 0)$$
 
