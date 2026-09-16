@@ -171,6 +171,12 @@ def load_model_if_available(model_path: str, device: str):
     path_obj = Path(model_path)
     # Search common locations if default path not immediately found
     candidates = [
+        Path("models/best_denoiser_v9.pth"),
+        Path("scripts/checkpoints/best_denoiser_v9.pth"),
+        Path(__file__).resolve().parent.parent / "models" / "best_denoiser_v9.pth",
+        Path(__file__).resolve().parent / "checkpoints" / "best_denoiser_v9.pth",
+        Path("models/best_denoiser_v8.pth"),
+        Path("scripts/checkpoints/best_denoiser_v8.pth"),
         Path("models/best_denoiser_v7.pth"),
         Path("scripts/checkpoints/best_denoiser_v7.pth"),
         Path(__file__).resolve().parent.parent / "models" / "best_denoiser_v7.pth",
@@ -233,7 +239,7 @@ def load_model_if_available(model_path: str, device: str):
             from models import build_denoising_model
 
         checkpoint = torch.load(str(path_obj), map_location=device)
-        width = checkpoint.get("width", 64 if "v7" in str(path_obj) else 48)
+        width = checkpoint.get("width", 64 if any(v in str(path_obj) for v in ["v7", "v8", "v9"]) else 48)
         model = build_denoising_model(width=width)
         sd = checkpoint["model_state_dict"]
         clean_sd = {k.replace("module.", ""): v for k, v in sd.items() if k != "n_averaged"}
