@@ -171,6 +171,10 @@ def load_model_if_available(model_path: str, device: str):
     path_obj = Path(model_path)
     # Search common locations if default path not immediately found
     candidates = [
+        Path("models/best_denoiser_v7.pth"),
+        Path("scripts/checkpoints/best_denoiser_v7.pth"),
+        Path(__file__).resolve().parent.parent / "models" / "best_denoiser_v7.pth",
+        Path(__file__).resolve().parent / "checkpoints" / "best_denoiser_v7.pth",
         Path("models/best_denoiser_v6.pth"),
         Path("models/best_denoiser_v6_ema.pth"),
         Path("scripts/checkpoints/best_denoiser_v6.pth"),
@@ -203,7 +207,7 @@ def load_model_if_available(model_path: str, device: str):
                 path_obj = cand
                 break
     else:
-        # If default requested was best_denoiser.pth but v4 or v3 exists, upgrade automatically
+        # If default requested was best_denoiser.pth but v7, v6, or v4 exists, upgrade automatically
         for cand in candidates[:8]:
             if cand.is_file():
                 path_obj = cand
@@ -229,12 +233,14 @@ def load_model_if_available(model_path: str, device: str):
             from models import build_denoising_model
 
         checkpoint = torch.load(str(path_obj), map_location=device)
-        width = checkpoint.get("width", 48)
+        width = checkpoint.get("width", 64 if "v7" in str(path_obj) else 48)
         model = build_denoising_model(width=width)
-        model.load_state_dict(checkpoint["model_state_dict"])
+        sd = checkpoint["model_state_dict"]
+        clean_sd = {k.replace("module.", ""): v for k, v in sd.items() if k != "n_averaged"}
+        model.load_state_dict(clean_sd)
         model.to(device)
         model.eval()
-        print(f"[*] Successfully loaded trained checkpoint from {path_obj}")
+        print(f"[*] Successfully loaded trained checkpoint from {path_obj} (width={width})")
         return model
     except Exception as e:
         print(f"[!] Warning: Checkpoint could not be loaded ({e}). Falling back to Classical DSP.")

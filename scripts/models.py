@@ -159,8 +159,10 @@ class NAFNet(nn.Module):
         return torch.clamp(x, 0.0, 1.0)
 
 
-def build_denoising_model(width: int = 48) -> NAFNet:
-    """Build and return an instance of the denoising network (supports v1 width=32 and v3 width=48)."""
-    if width == 48:
+def build_denoising_model(width: int = 64) -> NAFNet:
+    """Build and return an instance of the denoising network (supports v1 width=32, v3/v4/v6 width=48, and v7 width=64)."""
+    if width == 64:
+        return NAFNet(img_channel=3, width=64, middle_blk_num=8, enc_blk_nums=(2, 2, 4, 8), dec_blk_nums=(2, 2, 2, 2))
+    elif width == 48:
         return NAFNet(img_channel=3, width=48, middle_blk_num=4, enc_blk_nums=(2, 2, 4, 8), dec_blk_nums=(2, 2, 2, 2))
     return NAFNet(img_channel=3, width=width, middle_blk_num=2, enc_blk_nums=(2, 2, 3), dec_blk_nums=(2, 2, 2))

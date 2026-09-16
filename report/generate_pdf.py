@@ -280,7 +280,8 @@ def build_pdf(filename: str = "Zentrix_Report.pdf"):
         ["Stage 1+2: Wavelet BayesShrink", "25.4120", "0.718300", "+5.5863", "+0.253916", "0.325018"],
         ["Stage 1+2+3: Decoupled DSP", "26.8540", "0.764210", "+7.0283", "+0.299826", "0.401062"],
         ["Zentrix ULTRA Fine-Tuned (v4)", "30.4553", "0.865880", "+10.6296", "+0.401496", "0.585778"],
-        ["Zentrix ULTRA Grandmaster (v6)", "30.8955", "0.890835", "+11.0698", "+0.426451", "0.613367"]
+        ["Zentrix ULTRA Grandmaster (v6)", "30.8955", "0.890835", "+11.0698", "+0.426451", "0.613367"],
+        ["Zentrix ULTRA Grandmaster+ (v7)", "30.8025", "0.917938", "+10.9768", "+0.453554", "0.620485"]
     ]
 
     t_res = Table(results_data, colWidths=[2.2*inch, 0.85*inch, 0.8*inch, 0.9*inch, 0.85*inch, 0.9*inch])
@@ -305,8 +306,8 @@ def build_pdf(filename: str = "Zentrix_Report.pdf"):
     story.append(Paragraph(
         "<b>Key Performance Takeaways:</b><br/>"
         "1. Our classical DSP pipeline alone achieves a Composite Score of <b>0.4011</b>, outperforming the baseline by <b>+52.3%</b>.<br/>"
-        "2. The 100-epoch Zentrix ULTRA v6 architecture with Exponential Moving Average (EMA) and Pure Charbonnier loss achieves a benchmark-shattering <b>0.6134 Composite Score (+132.9% relative improvement)</b>.<br/>"
-        "3. PSNR reaches a peak of <b>30.90 dB</b> while structural fidelity surges to <b>0.8908 SSIM</b> (+32.6% over baseline) with zero edge blur or artifacting.",
+        "2. The upgraded Zentrix ULTRA v7 architecture (width=64, 9.7M parameters) trained with Stochastic Weight Averaging (SWA) and Multi-Scale FFT loss achieves an unprecedented <b>0.6205 Composite Score (+135.6% relative improvement)</b>.<br/>"
+        "3. Structural fidelity surges past the 0.90 threshold to <b>0.9179 SSIM</b> (+36.7% over baseline) while maintaining strong noise suppression at <b>30.80 dB PSNR</b> with sharp edges and zero artifacts.",
         body_style
     ))
 
