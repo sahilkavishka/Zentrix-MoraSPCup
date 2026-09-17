@@ -80,5 +80,19 @@ python scripts/run_submission.py --tta 1 --sharpness 0.20
 
 ---
 
+## 📦 Official Submission Deliverables
+
+* **Team Name:** Zentrix
+* **Frozen Submission Git Commit SHA:** `cce0525a64ad0e14ab46e56227443557df33a7e5`
+* **Frozen Model Weights:** `models/best_denoiser_v10.pth` (width=64, 86.49M parameters)
+* **Model Checkpoint SHA-256:** `ae8cb245fb5fbb3ae7b19e2127d8a3c16051f3725fedcf0e303d54657d4e6564`
+* **Submission Package:** `Zentrix.zip` (31.74 MB, exactly 20 images `461.png`–`480.png`, 992×992 RGB, zero subfolders)
+* **Zentrix.zip SHA-256:** `64ed6e3dc4923ad2370e9ae8be3512d49fef42ff5358f91df8192a7ef7311078`
+* **Technical Report:** `Zentrix_Report.pdf` (3 pages, IEEE 12pt format, 1.0-inch margins)
+* **Report SHA-256:** `87b458e4d0b1d479513cefc47e0ed2547f9d1bcdf2daa576c47a31f5e7bea9f3`
+* **Final Submission Composite Score:** **`0.6863`** (+160.6% relative gain over baseline)
+
+---
+
 ## 📜 Authors & Citation
 - **Team Zentrix** — Mora SP Cup 2026

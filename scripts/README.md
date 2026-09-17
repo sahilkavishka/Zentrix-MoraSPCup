@@ -90,10 +90,15 @@ A ready-to-run Google Colab / Kaggle notebook is also included at `Mora_SP_Cup_C
 ## 6. Official Submission Information
 
 * **Team Name:** Zentrix
+* **Frozen Submission Git Commit SHA:** `cce0525a64ad0e14ab46e56227443557df33a7e5`
 * **Model Architecture:** NAFNet-APEX v10 (width=64, 86.49M params, EMA + SWA)
 * **Model Checkpoint:** `models/best_denoiser_v10.pth`
 * **Model SHA-256 Checksum:** `ae8cb245fb5fbb3ae7b19e2127d8a3c16051f3725fedcf0e303d54657d4e6564`
-* **Validation PSNR:** `32.1845 dB`
-* **Validation SSIM:** `0.9178`
-* **Official Composite Score:** `0.6757` (+156.6% over baseline)
+* **Final Submission Archive:** `Zentrix.zip` (31.74 MB, 20 images 461.png–480.png, 992×992 RGB)
+* **Zentrix.zip SHA-256:** `64ed6e3dc4923ad2370e9ae8be3512d49fef42ff5358f91df8192a7ef7311078`
+* **Technical Report:** `Zentrix_Report.pdf` (3 pages, IEEE 12pt format, 1.0-inch margins)
+* **Report SHA-256:** `87b458e4d0b1d479513cefc47e0ed2547f9d1bcdf2daa576c47a31f5e7bea9f3`
+* **Validation Benchmark (v10):** PSNR: `32.1845 dB` | SSIM: `0.9178` | Score: `0.6757`
+* **Final Submission Benchmark (v10+TTA-8+CLAHE):** PSNR: `32.4210 dB` | SSIM: `0.9205` | Score: `0.6863` (+160.6% over baseline)
+
 
