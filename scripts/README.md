@@ -90,10 +90,10 @@ A ready-to-run Google Colab / Kaggle notebook is also included at `Mora_SP_Cup_C
 ## 6. Official Submission Information
 
 * **Team Name:** Zentrix
-* **Model Architecture:** NAFNet-Ultra v7 (width=64, 9.7M params, SWA)
-* **Model Checkpoint:** `models/best_denoiser_v7.pth`
-* **Model SHA-256 Checksum:** `021d49dbf3db3fec458d4927fb10ebfc39a2890ea8baca777f44cac4a6af61bd`
-* **Validation PSNR:** `30.8025 dB`
-* **Validation SSIM:** `0.9179`
-* **Official Composite Score:** `0.6205` (+135.6% over baseline)
+* **Model Architecture:** NAFNet-APEX v10 (width=64, 86.49M params, EMA + SWA)
+* **Model Checkpoint:** `models/best_denoiser_v10.pth`
+* **Model SHA-256 Checksum:** `ae8cb245fb5fbb3ae7b19e2127d8a3c16051f3725fedcf0e303d54657d4e6564`
+* **Validation PSNR:** `32.1845 dB`
+* **Validation SSIM:** `0.9178`
+* **Official Composite Score:** `0.6757` (+156.6% over baseline)
 

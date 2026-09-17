@@ -171,6 +171,10 @@ def load_model_if_available(model_path: str, device: str):
     path_obj = Path(model_path)
     # Search common locations if default path not immediately found
     candidates = [
+        Path("models/best_denoiser_v10.pth"),
+        Path("scripts/checkpoints/best_denoiser_v10.pth"),
+        Path(__file__).resolve().parent.parent / "models" / "best_denoiser_v10.pth",
+        Path(__file__).resolve().parent / "checkpoints" / "best_denoiser_v10.pth",
         Path("models/best_denoiser_v9.pth"),
         Path("scripts/checkpoints/best_denoiser_v9.pth"),
         Path(__file__).resolve().parent.parent / "models" / "best_denoiser_v9.pth",
