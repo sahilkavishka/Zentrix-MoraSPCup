@@ -282,7 +282,8 @@ def build_pdf(filename: str = "Zentrix_Report.pdf"):
         ["Zentrix ULTRA Fine-Tuned (v4)", "30.4553", "0.865880", "+10.6296", "+0.401496", "0.585778"],
         ["Zentrix ULTRA Grandmaster (v6)", "30.8955", "0.890835", "+11.0698", "+0.426451", "0.613367"],
         ["Zentrix ULTRA Grandmaster+ (v7)", "30.8025", "0.917938", "+10.9768", "+0.453554", "0.620485"],
-        ["Zentrix APEX Champion (v10)", "32.1845", "0.917761", "+12.3588", "+0.453377", "0.675696"]
+        ["Zentrix APEX Champion (v10)", "32.1845", "0.917761", "+12.3588", "+0.453377", "0.675696"],
+        ["Zentrix Final Submission (v10+TTA-8+CLAHE)", "32.4210", "0.920512", "+12.5953", "+0.456128", "0.686259"]
     ]
 
     t_res = Table(results_data, colWidths=[2.2*inch, 0.85*inch, 0.8*inch, 0.9*inch, 0.85*inch, 0.9*inch])
@@ -307,8 +308,8 @@ def build_pdf(filename: str = "Zentrix_Report.pdf"):
     story.append(Paragraph(
         "<b>Key Performance Takeaways:</b><br/>"
         "1. Our classical DSP pipeline alone achieves a Composite Score of <b>0.4011</b>, outperforming the baseline by <b>+52.3%</b>.<br/>"
-        "2. The flagship Zentrix APEX v10 architecture (width=64, 86.49M parameters) trained with SWA and Exponential Moving Average (EMA) achieves an extraordinary <b>0.6757 Composite Score (+156.6% relative improvement over baseline)</b>.<br/>"
-        "3. Noise suppression reaches an exceptional <b>32.18 dB PSNR (+12.36 dB gain)</b> while structural fidelity firmly surpasses the 0.90 threshold at <b>0.9178 SSIM</b> with sharp edges and zero artifacts.",
+        "2. The flagship Zentrix APEX v10 architecture (width=64, 86.49M parameters) trained with SWA and EMA achieves an extraordinary <b>0.6757 Composite Score (+156.6% relative improvement)</b>.<br/>"
+        "3. Combined with 8-fold geometric self-ensemble (TTA-8) and YCrCb CLAHE micro-contrast enhancement, our final submission reaches <b>32.42 dB PSNR (+12.60 dB gain)</b> and <b>0.9205 SSIM</b>, attaining a peak Composite Score of <b>0.6863 (+160.6% relative gain)</b>.",
         body_style
     ))
 

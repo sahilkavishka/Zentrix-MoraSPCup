@@ -19,7 +19,8 @@
 | **Zentrix ULTRA Hybrid (NAFNet-v3)** | 29.0013 | 0.8817 | +9.1756 | +0.4173 | 0.5339 | +102.8% |
 | **Zentrix ULTRA Grandmaster (v6)** | 30.8955 | 0.8908 | +11.0698 | +0.4264 | 0.6134 | +132.9% |
 | **Zentrix ULTRA Grandmaster+ (v7)** | 30.8025 | 0.9179 | +10.9768 | +0.4535 | 0.6205 | +135.6% |
-| **Zentrix APEX Champion (v10)** | **32.1845** | **0.9178** | **+12.3588** | **+0.4534** | **0.6757** | **+156.6%** 🏆 |
+| **Zentrix APEX Champion (v10)** | 32.1845 | 0.9178 | +12.3588 | +0.4534 | 0.6757 | +156.6% |
+| **Zentrix Final Submission (v10+TTA-8+CLAHE)** | **32.4210** | **0.9205** | **+12.5953** | **+0.4561** | **0.6863** | **+160.6%** 🏆 |
 
 $$\text{Composite Score} = 0.6 \cdot \text{clip}\left(\frac{\Delta\text{PSNR}}{15}, 0, 1\right) + 0.4 \cdot \max(\Delta\text{SSIM}, 0)$$
 

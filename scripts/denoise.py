@@ -243,7 +243,7 @@ def load_model_if_available(model_path: str, device: str):
             from models import build_denoising_model
 
         checkpoint = torch.load(str(path_obj), map_location=device)
-        width = checkpoint.get("width", 64 if any(v in str(path_obj) for v in ["v7", "v8", "v9"]) else 48)
+        width = checkpoint.get("width", 64 if any(v in str(path_obj) for v in ["v7", "v8", "v9", "v10", "v11", "v12"]) else 48)
         model = build_denoising_model(width=width)
         sd = checkpoint["model_state_dict"]
         clean_sd = {k.replace("module.", ""): v for k, v in sd.items() if k != "n_averaged"}
