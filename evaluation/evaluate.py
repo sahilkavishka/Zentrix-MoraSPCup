@@ -1,24 +1,3 @@
-#!/usr/bin/env python3
-"""
-evaluate.py
------------------------
-Computes the denoising score for a set of images. This is a self-check
-tool: it reads the noisy input, your denoised output, and the ground-truth
-images, then reports the mean PSNR, SSIM, and composite score.
-
-USAGE (three required paths):
-    python evaluate.py \
-        --noisy_dir noise_test \
-        --pred_dir my_outputs \
-        --gt_dir ground_truth_test
-
-Filename convention:
-    ground_truth_test/001.png          <- ground truth
-    noise_test/001_noise.png            <- noisy input (given to you)
-    my_outputs/001.png                   <- YOUR reconstruction (same id, NO suffix)
-
-"""
-
 from __future__ import annotations
 
 import argparse

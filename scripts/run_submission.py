@@ -1,18 +1,3 @@
-"""
-scripts/run_submission.py
--------------------------
-Automated submission generator and validator for Mora SP Cup 2026.
-
-Actions performed:
-1. Runs `scripts/denoise.py` on the preliminary noisy set (461_noise.png - 480_noise.png).
-2. Verifies that all 20 images exist in `competition_data/submissions/denoised/` named 461.png to 480.png.
-3. Strictly validates that every image is:
-   - 992 x 992 resolution
-   - 3-channel RGB uint8 format
-   - Uncorrupted valid PNG
-4. Archives the 20 denoised PNG files into `Zentrix.zip` at repository root ready for Google Drive submission.
-"""
-
 import os
 import sys
 import zipfile

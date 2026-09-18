@@ -1,10 +1,4 @@
-"""
-scripts/train.py
-----------------
-Training pipeline for Mora SP Cup 2026 Low-Light Image Denoising.
-Optimizes a hybrid Charbonnier + SSIM loss with Cosine Annealing learning rate.
-Tracks PSNR, SSIM, and Official Mora SP Cup Composite Score on validation splits.
-"""
+
 
 import os
 import argparse

@@ -1,16 +1,3 @@
-"""
-scripts/models.py
------------------
-Lightweight NAFNet (Nonlinear Activation Free Network) implementation for
-Low-Light Image Denoising & Enhancement (Mora SP Cup 2026).
-
-Key architectural advantages:
-- SimpleGate (channel splitting & element-wise multiplication) replaces non-linear activations
-- Simplified Channel Attention (SCA) replaces heavy self-attention
-- Depthwise 3x3 convolutions ensure minimal FLOPs and high CPU/GPU inference throughput
-- Multi-scale U-Net encoder-decoder with residual skip connections
-"""
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

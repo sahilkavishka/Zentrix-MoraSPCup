@@ -1,27 +1,3 @@
-"""
-scripts/denoise.py
-------------------
-Flagship Low-Light Image Denoising Pipeline for Mora SP Cup 2026.
-
-Classical DSP Engine (7 Stages — State-of-the-Art, Zero Deep Learning):
-  Stage 1: Adaptive Sensor Defect Pixel Repair (Rank-Order Outlier Detection)
-  Stage 2: Anisotropic Diffusion / Perona-Malik Approximation (iterative bilateral)
-  Stage 3: Dual DWT BayesShrink (bior2.2 + db2, 3-level, averaged)
-  Stage 4: Non-Local Means Patch Filtering on Luminance (YCrCb decoupled)
-  Stage 5: Dual Color-Space Filtering (YCrCb Chrominance + CIE-LAB Lightness)
-  Stage 6: Guided Image Filter Structure Preservation (He et al. ECCV 2010)
-  Stage 7: Multi-Scale Laplacian Pyramid Detail Fusion + CLAHE
-
-Deep Learning Engine (when model weights available):
-  NAFNet-APEX v10 (width=64, 86.49M params, EMA+SWA) with 8-fold TTA
-
-- 100% Offline, Zero Network Calls during Inference
-- Automatic GPU → CPU Fallback
-
-USAGE:
-    python scripts/denoise.py --noise_dir competition_data/submissions/noisy --denoised_dir competition_data/submissions/denoised
-"""
-
 import os
 import argparse
 import time

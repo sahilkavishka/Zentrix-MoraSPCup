@@ -1,17 +1,3 @@
-"""
-scripts/compare_with_baseline.py
---------------------------------
-Automated benchmark and comparison tool for Mora SP Cup 2026.
-Runs both the Organizer Baseline and the Improved Model, evaluates both against Ground Truth,
-and displays a side-by-side performance comparison using the official competition metrics.
-
-USAGE:
-    python scripts/compare_with_baseline.py \
-        --noisy_dir competition_data/public/noisy \
-        --gt_dir competition_data/public/ground_truth \
-        --model_path models/best_denoiser.pth
-"""
-
 import os
 import sys
 import argparse

@@ -1,22 +1,3 @@
-"""
-denoise.py
------------------------
-RUN ON: CPU only. No training, no GPU, no model weights.
-
-Fully classical low-light denoising pipeline:
-    defect-pixel correction -> Non-Local Means denoise
-
-No brightness/tone correction is applied -- input and ground truth are
-both naturally dim evening/night images, differing mainly by noise, so
-there is no exposure gap to fix.
-
-Reads every `<id>_noise.<ext>` file from --input_dir and writes `<id>.<ext>`
-to --output_dir.
-
-USAGE:
-    python denoise.py --input_dir noise_test --output_dir my_outputs
-"""
-
 import argparse
 import time
 from pathlib import Path
